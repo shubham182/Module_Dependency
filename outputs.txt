@@ -1,0 +1,69 @@
+1.Comile file by write Makefile in same folder:
+        make
+  see the output :
+        ls
+
+output : ****************************************************************
+	 *dep_mod.c  dep_mod.ko  dep_mod.mod.c  dep_mod.mod.o  dep_mod.o  exp_mod.c  exp_mod.ko  exp_mod.mod.c  exp_mod.mod.o  exp_mod.o  Makefile  modules.order  Module.symvers  README.md
+	 ***************************************************************
+
+2.1.copy both modules into /lib/modules/'uname -r': 
+	sudo cp dep_mod.ko exp_mod.ko  /lib/modules/'uname -r'
+ 
+2.2.
+    See the output :
+         dmesg | tail -1
+output : ****************************************************************
+	 *[37765.633676] In moduleExp:exporting functions and varible for others
+         ****************************************************************
+ 
+2.3.Now insert module using modprobe:
+        sudo modprobe exp_mod.ko
+    See the output :
+         dmesg | tail -5
+output : ****************************************************************
+	 *[37848.331433] In dep_mod: Module is dependent on exp_mod
+          [37848.331435] SpanIdea
+          [37848.331435] SpanIdea
+          [37848.331436] Sum of two numbers:9 
+          [37848.331436] Value of global variable:1000
+	 *
+	 ***************************************************************
+
+3.1.See the exporting module that get inserted:
+	cat /proc/modules | grep exp_mod
+output : **************************************************************
+	 *  exp_mod 16384 0 - Live 0x00000000 (OE)
+	 **************************************************************
+3.2.See the dependent module that get inserted:
+        cat /proc/modules | grep dep_mod
+output : **************************************************************
+	 *  dep_mod 16384 0 - Live 0x00000000 (OE)
+         *  exp_mod 16384 1 dep_mod, Live 0x00000000 (OE)
+	 **************************************************************
+
+4.1.Remove exporting module first:
+	sudo rmmod exp_mod
+   See the output :
+output : ****************************************************************
+	 *rmmod: ERROR: Module exp_mod is in use by: dep_mod
+         ****************************************************************
+4.2.Remove dependent module:
+        sudo rmmod dep_mod
+    See the output :
+	dmesg | tail -1
+output : **************************************************************
+	 *[37948.752698] Exit dep_mod..
+	 **************************************************************
+4.3.Now Remove exporting module:
+       sudo rmmod exp_mod
+   See the output :
+       dmesg | tail -1
+output : ****************************************************************
+	 *[37970.498759] Exit moduleExp....
+         ****************************************************************
+
+
+
+
+

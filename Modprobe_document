@@ -1,0 +1,28 @@
+How To Load dependent modules using "modprobe" utility:
+
+STEP 1 : Write two modules that, they are dependent, using EXPORT_SYMBOL().
+ 
+STEP 2 : To load dependent modules automatically, below procedure needs to be followed.
+
+	 Use below command for copy modulesinto lib/modules/`uname -r` ( `uname -r for current kernel version.)
+        
+         sudo cp file_name.ko /lib/modules/`uname -r`
+         NOTE: All dependent modules (.ko) should be copied.
+         
+ 
+STEP 3 : Create dependency among the dependent modules using below command.
+
+         sudo depmod -a
+
+STEP 4 : Now from the current module directory, use below command to load dependent modules
+
+         sudo modprobe file
+	NOTE: ".ko" extention is NOT required.
+
+STEP 5: lsmod | more (it should publish modules list.)
+
+          To check our kernel should loaded all dependent modules.
+
+STEP 6: use dmesg : we can check messages which are written in code.
+
+
